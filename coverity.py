@@ -177,7 +177,8 @@ class CoverityReportStyle2 (CoverityReport):
     <td style=\"border:1px solid #AAAAAA;padding: 6px;\">%s</td>
     <td style=\"border:1px solid #AAAAAA;padding: 6px;\">%s</td>
     <td style=\"border:1px solid #AAAAAA;padding: 6px;\">%s</td>
-</tr>""" % (p.link, p.cid, p.firstDetected, p.displayType, p.displayFile, p.displayFunction, p.displayCategory, p.owner)
+    <td style=\"border:1px solid #AAAAAA;padding: 6px;\">%s</td>
+</tr>""" % (p.link, p.cid, p.firstDetected, p.displayImpact, p.displayType, p.displayFile, p.displayFunction, p.displayCategory, p.owner)
             if p.owner in self.user_data:
                 self.user_data[p.owner] = self.user_data[p.owner] + "\n" + content
             else:
@@ -213,7 +214,8 @@ a
     <td style=\"border:1px solid #AAAAAA;padding: 6px;\">%s</td>
     <td style=\"border:1px solid #AAAAAA;padding: 6px;\">%s</td>
     <td style=\"border:1px solid #AAAAAA;padding: 6px;\">%s</td>
-</tr>""" % ("CID", "First Detected", "Type", "File", "Function", "Category", "Owner") + data
+    <td style=\"border:1px solid #AAAAAA;padding: 6px;\">%s</td>
+</tr>""" % ("CID", "First Detected", "Impact", "Type", "File", "Function", "Category", "Owner") + data
 
             data = "<table class=\"t_data\" style=\"border-collapse:collapse;color: #444444\">" + data + "</table>"
             logging.debug ("body 0")
@@ -368,6 +370,7 @@ class Coverity:
             cdata.owner = c[u'owner']
             cdata.firstDetected = c[u'firstDetected']
             cdata.displayType = c[u'displayType']
+            cdata.displayImpact = c[u'displayImpact']
             cdata.displayFile = c[u'displayFile']
             cdata.displayFunction = c[u'displayFunction']
             cdata.displayCategory = c[u'displayCategory']
