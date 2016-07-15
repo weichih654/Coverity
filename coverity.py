@@ -6,7 +6,6 @@ import urllib2
 from StringIO import StringIO
 import gzip
 import logging
-import logging
 import os
 import ConfigParser
 import getopt
@@ -469,16 +468,22 @@ def __output__ (type, title, content, to = None, dry_run = False):
         print content
 
 def get_send_list (file):
+    logging.debug ("get_send_list")
+    if file == "":
+        return []
     list = []
-    with open(file) as fp:
-        for line in fp:
-            line = line.strip()
-            list.append(line)
+    try:
+        with open(file) as fp:
+            for line in fp:
+                line = line.strip()
+                list.append(line)
+    except:
+        logging.warning ("file not exist")
     return list
 
 if __name__ == '__main__':
-    config = ConfigParser.ConfigParser()
-    config = ConfigParser.RawConfigParser()
+    config = ConfigParser.RawConfigParser({"white_list": ""})
+
     send_list = []
     try:
         config.read('setting.cfg')
@@ -493,9 +498,6 @@ if __name__ == '__main__':
     except ConfigParser.Error:
         logging.error ("Get cfg fail")
         exit (2)
-
-    if white_list != "":
-        send_list = get_send_list (white_list)
 
     debug = "debug"
     try:
@@ -518,6 +520,11 @@ if __name__ == '__main__':
         level = logging.ERROR
 
     logging.basicConfig(level=level)
+
+    logging.debug ("host = %s, port = %d, id = %s, password = %s, white_list = %s, project_id = %s, view_id = %s" % (host, port, id, password, white_list, project_id, view_id))
+
+    if white_list != "":
+        send_list = get_send_list (white_list)
 
     logging.info ("host = %s, port = %d, id = %s, password = %s" % (host, port, id, password))
 
@@ -548,7 +555,9 @@ if __name__ == '__main__':
             if len (send_list) == 0:
                 users = co.get_all_users ()
             else:
+                logging.info ("Get users from %s" % white_list)
                 users = send_list
+            logging.info ("%d users" % len (users))
             for u in users:
                 if u == "Unassigned":
                     continue
