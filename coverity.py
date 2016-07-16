@@ -18,6 +18,8 @@ def show_progress (count, total):
     sys.stdout.flush()
 
 def send_mail (title, content, toaddr, dry_run):
+    if content == "":
+        return None
     tmp = tempfile.NamedTemporaryFile ()
     logging.debug ("create temp file %s" % tmp.name)
     f = open (tmp.name, "w")
