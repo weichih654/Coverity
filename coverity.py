@@ -489,7 +489,8 @@ if __name__ == '__main__':
 
     send_list = []
     try:
-        config.read('setting.cfg')
+        cfgpath = os.path.dirname(os.path.abspath(__file__)) + "/setting.cfg"
+        config.read(cfgpath)
         host = config.get("global", "host")
         port = config.getint("global", "port")
         id = config.get("global", "id")
