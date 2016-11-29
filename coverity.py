@@ -664,6 +664,10 @@ if __name__ == '__main__':
                 if u == "Unassigned":
                     continue
                 content = co.get_report (u)
+                if content is None:
+                    logging.warning ("Content of %s is Empty" % u)
+                    continue
+
                 ds = co.get_all_datas_by_user (u)
                 issues_count = len (ds)
                 mail = u + "@qnap.com"
