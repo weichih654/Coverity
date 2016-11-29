@@ -621,7 +621,7 @@ if __name__ == '__main__':
     else:
         level = logging.ERROR
 
-    logging.basicConfig(level=level)
+    logging.basicConfig(filename="/var/log/coverity.log", level=level)
 
     logging.debug ("host = %s, port = %d, id = %s, password = %s, white_list = %s, project_id = %s, view_id = %s" % (host, port, id, password, white_list, project_id, view_id))
 
