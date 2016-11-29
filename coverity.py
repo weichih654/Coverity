@@ -496,7 +496,7 @@ class Coverity:
         logging.debug ("get_report (%s)" % owner)
         if len(self.all_coverity_datas) == 0:
             self.__get_outstanding()
-        if self.__have_high (self.all_coverity_datas) is True:
+        if owner != "" and self.__have_high (self.get_all_datas_by_user (owner)) is True:
             coverity_report = CoverityReportStyleHigh (self.all_coverity_datas)
         else:
             coverity_report = CoverityReportStyle2 (self.all_coverity_datas)
