@@ -243,6 +243,90 @@ a
         else:
             return None
 
+class CoverityReportStyleHigh (CoverityReport):
+    def __init__ (self, coverity_datas):
+        self.user_data = {}
+        self.coverity_datas = coverity_datas
+
+    def get_report_by_user (self, owner):
+        logging.debug ("get_report (%s)" % owner)
+        report = ""
+        logging.debug ("Total %d datas" % len (self.coverity_datas))
+
+        for p in self.coverity_datas:
+            content = """
+<tr>
+    <td style=\"border:1px solid #AAAAAA;padding: 6px;\"><a href = \"%s\" target=_blank style = \"color: navy\">%d</a></td>
+    <td style=\"border:1px solid #AAAAAA;padding: 6px;\">%s</td>
+    <td style=\"border:1px solid #AAAAAA;padding: 6px;\">%s</td>
+    <td style=\"border:1px solid #AAAAAA;padding: 6px;\">%s</td>
+    <td style=\"border:1px solid #AAAAAA;padding: 6px;\">%s</td>
+    <td style=\"border:1px solid #AAAAAA;padding: 6px;\">%s</td>
+    <td style=\"border:1px solid #AAAAAA;padding: 6px;\">%s</td>
+    <td style=\"border:1px solid #AAAAAA;padding: 6px;\">%s</td>
+</tr>""" % (p.link, p.cid, p.firstDetected, p.displayImpact, p.displayType, p.displayFile, p.displayFunction, p.displayCategory, p.owner)
+            if p.owner in self.user_data:
+                self.user_data[p.owner] = self.user_data[p.owner] + "\n" + content
+            else:
+                self.user_data[p.owner] = content
+
+        for u in self.user_data.keys():
+            css = """
+<style>
+table.t_data
+{
+    /* border: 1px; - **EDITED** - doesn't seem like influences here */
+    background-color: #FFFFFF;
+}
+table.t_data thead th, table.t_data thead td
+{
+    margin: 1px;
+    padding: 5px;
+}
+
+a
+{
+    color: navy;
+}
+</style>"""
+
+            data = self.user_data[u]
+            data = """
+<tr style = \"background-color: red;color: #ffffff\">
+    <td style=\"border:1px solid #AAAAAA;padding: 6px;\">%s</td>
+    <td style=\"border:1px solid #AAAAAA;padding: 6px;\">%s</td>
+    <td style=\"border:1px solid #AAAAAA;padding: 6px;\">%s</td>
+    <td style=\"border:1px solid #AAAAAA;padding: 6px;\">%s</td>
+    <td style=\"border:1px solid #AAAAAA;padding: 6px;\">%s</td>
+    <td style=\"border:1px solid #AAAAAA;padding: 6px;\">%s</td>
+    <td style=\"border:1px solid #AAAAAA;padding: 6px;\">%s</td>
+    <td style=\"border:1px solid #AAAAAA;padding: 6px;\">%s</td>
+</tr>""" % ("CID", "First Detected", "Impact", "Type", "File", "Function", "Category", "Owner") + data
+
+            data = "<table class=\"t_data\" style=\"border-collapse:collapse;color: #444444\">" + data + "</table>"
+            logging.debug ("body 0")
+            logging.debug (data)
+            data = "<body>" + \
+                   css + \
+                   "<html>" + \
+                   data
+            logging.debug ("body 1")
+            logging.debug (data)
+            data = data + \
+                   "</html>" + \
+                   "</body>"
+            logging.debug ("body 3")
+            logging.debug (data)
+            self.user_data[u] = data
+
+        logging.debug ("[user_data]\n")
+        for u in self.user_data.keys():
+            logging.debug ("user = %s", u)
+        if owner in self.user_data:
+            return self.user_data [owner]
+        else:
+            return None
+
 class Requests:
     class Response :
         def __init__ (self):
@@ -400,11 +484,23 @@ class Coverity:
         params = '{"projectId":' + str(self.projectId) + ',"viewId":' + str(self.viewId) + ',"pageNum":' + str (page_num) + ', "offset":321}'
         resp = req.post_binary (url=url, params=params, headers=headers)
 
+    def __have_high (self, datas):
+        have_high = False
+        for d in datas:
+            if d.displayImpact == 'High':
+                have_high = True
+                break
+        return have_high
+
     def get_report (self, owner=""):
         logging.debug ("get_report (%s)" % owner)
         if len(self.all_coverity_datas) == 0:
             self.__get_outstanding()
-        coverity_report = CoverityReportStyle2 (self.all_coverity_datas)
+        if self.__have_high (self.all_coverity_datas) is True:
+            coverity_report = CoverityReportStyleHigh (self.all_coverity_datas)
+        else:
+            coverity_report = CoverityReportStyle2 (self.all_coverity_datas)
+
         report = coverity_report.get_report_by_user (owner)
         if report is None:
             logging.error ("report is Empty")
