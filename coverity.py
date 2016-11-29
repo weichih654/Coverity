@@ -717,9 +717,14 @@ if __name__ == '__main__':
         co = Coverity (id, password.decode("base64"), project_id, view_id)
         output = ""
         for u in co.get_all_users():
+            high_count = 0
             data = co.get_all_datas_by_user (u)
+            for d in data:
+                if d.displayImpact == 'High':
+                    high_count = high_count + 1
             data_count_by_user = len (data)
-            output = output + u + " (" + str(data_count_by_user) + ")\n"
+            #output = output + u + " (" + str(data_count_by_user) + ") (" + high_count + " High)\n"
+            output = output + "%s (%d) (%d High)\n" % (u, data_count_by_user, high_count)
 
         __output__ (OutputType.STDOUT, "", output)
     else:
