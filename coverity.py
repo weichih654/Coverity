@@ -261,9 +261,9 @@ class Coverity:
         if len(self.all_coverity_datas) == 0:
             self.__get_outstanding()
         if owner != "" and self.__have_high (self.get_all_datas_by_user (owner)) is True:
-            coverity_report = CoverityReportStyleHigh (self.all_coverity_datas)
+            coverity_report = CoverityReportStyleHigh (self)
         else:
-            coverity_report = CoverityReportStyle2 (self.all_coverity_datas)
+            coverity_report = CoverityReportStyle2 (self)
 
         report = coverity_report.get_report_by_user (owner)
         if report is None:
@@ -274,7 +274,7 @@ class Coverity:
         log.debug ("get_summary")
         if len(self.all_coverity_datas) == 0:
             self.__get_outstanding()
-        coverity_report = CoverityReportStyle2 (self.all_coverity_datas)
+        coverity_report = CoverityReportStyle2 (self)
         report = coverity_report.get_summary ()
         return report
 

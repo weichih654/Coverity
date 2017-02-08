@@ -18,7 +18,7 @@ def get_hot_color (count):
         return "#cc00cc"
 
 class CoverityReport:
-    def __init__ (self, coverity_datas):
+    def __init__ (self, coverity):
         pass
     def get_report_by_user (self, owner):
         pass
@@ -26,9 +26,9 @@ class CoverityReport:
         pass
 
 class CoverityReportStyle1 (CoverityReport):
-    def __init__ (self, coverity_datas):
+    def __init__ (self, coverity):
         self.user_data = {}
-        self.coverity_datas = coverity_datas
+        self.coverity_datas = coverity.coverity_datas
 
     def get_report_by_user (self, owner):
         log.debug ("get_report (%s)" % owner)
@@ -92,10 +92,10 @@ a
         pass
 
 class CoverityReportStyle2 (CoverityReport):
-    def __init__ (self, coverity_datas):
+    def __init__ (self, coverity):
         self.user_data = {}
         self.user_datas = {}
-        self.coverity_datas = coverity_datas
+        self.coverity_datas = coverity.coverity_datas
 
     def get_report_by_user (self, owner):
         log.debug ("get_report (%s)" % owner)
@@ -238,9 +238,9 @@ a
 
 
 class CoverityReportStyleHigh (CoverityReport):
-    def __init__ (self, coverity_datas):
+    def __init__ (self, coverity):
         self.user_data = {}
-        self.coverity_datas = coverity_datas
+        self.coverity_datas = coverity.coverity_datas
 
     def get_report_by_user (self, owner):
         log.debug ("get_report (%s)" % owner)
