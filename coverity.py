@@ -535,7 +535,7 @@ if __name__ == '__main__':
             log.info ("output to stdout")
             type = OutputType.STDOUT
 
-        title = "Coverity: Summary of view %s" % (view_id)
+        title = "Coverity: Summary (view id: %s)" % (view_id)
         dry_run = False
         if "-d" in opts_dict:
             dry_run = True

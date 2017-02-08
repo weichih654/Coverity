@@ -2,20 +2,20 @@ import logging
 log = logging.getLogger('coverity')
 
 def get_hot_color (count):
-    if count < 10:
+    if count < 10: # black
         return "#000000"
-    elif count < 20:
+    elif count < 20: # red
         return "#ff0000"
-    elif count < 30:
+    elif count < 30: # blue
         return "#0000cc"
-    elif count < 40:
-        return "#00ccff"
-    elif count < 50:
+    elif count < 40: # cyan
+        return "008fb3"
+    elif count < 50: # green
         return "#33cc33"
-    elif count < 60:
-        return "#ffff00"
-    else:
-        return "#cc00cc"
+    elif count < 60: # yellow
+        return "#e6e600"
+    else: # purple
+        return "#660066"
 
 class CoverityReport:
     def __init__ (self, coverity):
@@ -27,8 +27,9 @@ class CoverityReport:
 
 class CoverityReportStyle1 (CoverityReport):
     def __init__ (self, coverity):
+        self.coverity = coverity
         self.user_data = {}
-        self.coverity_datas = coverity.coverity_datas
+        self.coverity_datas = coverity.all_coverity_datas
 
     def get_report_by_user (self, owner):
         log.debug ("get_report (%s)" % owner)
@@ -93,9 +94,10 @@ a
 
 class CoverityReportStyle2 (CoverityReport):
     def __init__ (self, coverity):
+        self.coverity = coverity
         self.user_data = {}
         self.user_datas = {}
-        self.coverity_datas = coverity.coverity_datas
+        self.coverity_datas = coverity.all_coverity_datas
 
     def get_report_by_user (self, owner):
         log.debug ("get_report (%s)" % owner)
@@ -202,7 +204,7 @@ a
     color: navy;
 }
 </style>"""
-        body = ""
+        table_content = ""
         for u in self.user_datas.keys():
             l = 0
             m = 0
@@ -220,7 +222,7 @@ a
 <td style=\"border:1px solid #AAAAAA;padding: 6px;color: %s\">%d</td>
 <td style=\"border:1px solid #AAAAAA;padding: 6px;color: %s\">%d</td>
 <td style=\"border:1px solid #AAAAAA;padding: 6px;color: %s\">%d</td>""" % (u, get_hot_color (l), l, get_hot_color (m), m, get_hot_color (h), h)
-            body = body + "<tr>" + c + "</tr>"
+            table_content = table_content + "<tr>" + c + "</tr>"
 
         field = """
 <tr style = \"background-color: #CCCCCC;\">
@@ -230,8 +232,16 @@ a
 <td style=\"border:1px solid #AAAAAA;padding: 6px;\">%s</td>
 </tr>
 """ % ("Owner", "Low", "Medium", "High")
+
+        view_url = "%s/reports.htm?projectId=%s&viewId=%s" % (self.coverity.host, self.coverity.projectId, self.coverity.viewId)
+        info = """
+<div id = \"view_link\">
+    <a href="%s" target=_blank>%s</a>
+</div>
+        """ % (view_url, view_url)
         
-        body = "<table class=\"t_data\" style=\"border-collapse:collapse;\">" + field + body + "</table>"
+        table_content = "<div id = \"main_talbe\"><table class=\"t_data\" style=\"border-collapse:collapse;\">" + field + table_content + "</table></div>"
+        body = info + table_content
 
         content = "<body>" + css + "<html>" + body + "</html></body>"
         return content
@@ -240,7 +250,7 @@ a
 class CoverityReportStyleHigh (CoverityReport):
     def __init__ (self, coverity):
         self.user_data = {}
-        self.coverity_datas = coverity.coverity_datas
+        self.coverity_datas = coverity.all_coverity_datas
 
     def get_report_by_user (self, owner):
         log.debug ("get_report (%s)" % owner)
