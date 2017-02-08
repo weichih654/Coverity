@@ -211,6 +211,9 @@ a
 }
 </style>"""
         table_content = ""
+        a_l = 0
+        a_m = 0
+        a_h = 0
         for u in self.user_datas.keys():
             l = 0
             m = 0
@@ -223,6 +226,9 @@ a
                     m = m + 1
                 elif d.displayImpact == 'High':
                     h = h + 1
+            a_l = a_l + l
+            a_m = a_m + m
+            a_h = a_h + h
             c = """
 <td style=\"border:1px solid #AAAAAA;padding: 6px;\">%s</td>
 <td style=\"border:1px solid #AAAAAA;padding: 6px;color: %s\">%d</td>
@@ -231,7 +237,7 @@ a
             table_content = table_content + "<tr>" + c + "</tr>"
 
         field = """
-<tr style = \"background-color: #CCCCCC;\">
+<tr style = \"background-color: #404040;color: #d9d9d9;\">
 <td style=\"border:1px solid #AAAAAA;padding: 6px;\">%s</td>
 <td style=\"border:1px solid #AAAAAA;padding: 6px;\">%s</td>
 <td style=\"border:1px solid #AAAAAA;padding: 6px;\">%s</td>
@@ -245,8 +251,17 @@ a
     <a href="%s" target=_blank>%s</a>
 </div>
         """ % (view_url, view_url)
+
+        table_total = """
+<tr style = \"background-color: #CCCCCC;\">
+<td style=\"border:1px solid #AAAAAA;padding: 6px;\">%s</td>
+<td style=\"border:1px solid #AAAAAA;padding: 6px;\">%d</td>
+<td style=\"border:1px solid #AAAAAA;padding: 6px;\">%d</td>
+<td style=\"border:1px solid #AAAAAA;padding: 6px;\">%d</td>
+</tr>
+""" % ("Total", a_l, a_m, a_h)
         
-        table_content = "<div id = \"main_talbe\"><table class=\"t_data\" style=\"border-collapse:collapse;\">" + field + table_content + "</table></div>"
+        table_content = "<div id = \"main_talbe\"><table class=\"t_data\" style=\"border-collapse:collapse;\">" + field + table_content + table_total + "</table></div>"
         body = info + table_content
 
         content = "<body>" + css + "<html>" + body + "</html></body>"
