@@ -532,6 +532,8 @@ def __usage__ ():
     #print "Usage: " + sys.argv[0] + " [option] [id] [pwd (base64 encode)] [args...]"
     print """
 Usage
+-f
+    config file, default : setting.cfg
 -r
     get report.
 
@@ -543,11 +545,14 @@ Usage
         Write to file
     -a
         Send mail to all user.
-    -f
-        config file
     -d dry run
 -l
     list all users
+
+    -s [mail address, separate by space.
+        Send mail to
+    -o [file name]
+        Write to file
 
     """
     sys.exit (0)
@@ -741,7 +746,29 @@ if __name__ == '__main__':
             #output = output + u + " (" + str(data_count_by_user) + ") (" + high_count + " High)\n"
             output = output + "%s (%d) (%d High)\n" % (u, data_count_by_user, high_count)
 
-        __output__ (OutputType.STDOUT, "", output)
+        type = None
+        to = ""
+        if "-o" in opts_dict:
+            log.info ("output to file")
+            to = opts_dict ["-o"]
+            type = OutputType.FILE
+        elif "-s" in opts_dict:
+            log.info ("send mail")
+            to = opts_dict ["-s"]
+            if not re.match(r"[^@]+@[^@]+\.[^@]+", to):
+                log.warning ("Email %s is invalid" % to)
+                exit (2)
+
+            type = OutputType.MAIL
+        else:
+            log.info ("output to stdout")
+            type = OutputType.STDOUT
+
+        title = "Coverity: Summary of view %s" % (view_id)
+        dry_run = False
+        if "-d" in opts_dict:
+            dry_run = True
+        __output__ (type, title, output, to, dry_run)
     else:
         __usage__ ()
 
