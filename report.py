@@ -46,6 +46,11 @@ class CoverityReportStyle1 (CoverityReport):
         for u in self.user_data.keys():
             css = """
 <style>
+body
+{
+    color: #000000;
+}
+
 table.t_data
 {
     /* border: 1px; - **EDITED** - doesn't seem like influences here */
@@ -192,6 +197,7 @@ table.t_data
 {
     /* border: 1px; - **EDITED** - doesn't seem like influences here */
     background-color: #FFFFFF;
+    font-weight:bold;
 }
 table.t_data thead th, table.t_data thead td
 {
