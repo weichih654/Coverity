@@ -21,16 +21,16 @@ def send_mail (title, content, toaddr, dry_run):
     if content == "":
         return None
     tmp = tempfile.NamedTemporaryFile ()
-    logging.debug ("create temp file %s" % tmp.name)
+    log.debug ("create temp file %s" % tmp.name)
     f = open (tmp.name, "w")
     f.write (content)
     f.close ()
     cmd = "cat %s | /usr/bin/mail -a \"Content-type: text/html\" -s \"%s\" %s" % (tmp.name , title, toaddr)
-    logging.info (cmd)
+    log.info (cmd)
     if dry_run is False:
         os.system (cmd)
     else:
-        logging.info ("Dry run")
+        log.info ("Dry run")
 
 class CoverityData:
     def __init__ (self):
@@ -101,9 +101,9 @@ class CoverityReportStyle1 (CoverityReport):
         self.coverity_datas = coverity_datas
 
     def get_report_by_user (self, owner):
-        logging.debug ("get_report (%s)" % owner)
+        log.debug ("get_report (%s)" % owner)
         report = ""
-        logging.debug ("Total %d datas" % len (self.coverity_datas))
+        log.debug ("Total %d datas" % len (self.coverity_datas))
 
         for p in self.coverity_datas:
             content = "<tr><td style=\"border:1px solid #AAAAAA;padding: 3px;\"><a href = \"%s\" target=_blank style = \"color: navy\">%d</a></td><td style=\"border:1px solid #AAAAAA;padding: 3px;\">%s</td><td style=\"border:1px solid #AAAAAA;padding: 3px;\">%s</td><td style=\"border:1px solid #AAAAAA;padding: 3px;\">%s</td><td style=\"border:1px solid #AAAAAA;padding: 3px;\">%s</td><td style=\"border:1px solid #AAAAAA;padding: 3px;\">%s</td></tr>" % (p.link, p.cid, p.firstDetected, p.displayType, p.displayFile, p.displayCategory, p.owner)
@@ -136,24 +136,24 @@ a
             data = "<tr style = \"background-color: #CCCCCC;\"><td style=\"border:1px solid #AAAAAA;padding: 3px;\">%s</td><td style=\"border:1px solid #AAAAAA;padding: 3px;\">%s</td><td style=\"border:1px solid #AAAAAA;padding: 3px;\">%s</td><td style=\"border:1px solid #AAAAAA;padding: 3px;\">%s</td><td style=\"border:1px solid #AAAAAA;padding: 3px;\">%s</td><td style=\"border:1px solid #AAAAAA;padding: 3px;\">%s</td></tr>" % ("CID", "First Detected", "Display Type", "Display File", "Display Category", "Owner") + data
 
             data = "<table class=\"t_data\" style=\"border-collapse:collapse;\">" + data + "</table>"
-            logging.debug ("body 0")
-            logging.debug (data)
+            log.debug ("body 0")
+            log.debug (data)
             data = "<body>" + \
                    css + \
                    "<html>" + \
                    data
-            logging.debug ("body 1")
-            logging.debug (data)
+            log.debug ("body 1")
+            log.debug (data)
             data = data + \
                    "</html>" + \
                    "</body>"
-            logging.debug ("body 3")
-            logging.debug (data)
+            log.debug ("body 3")
+            log.debug (data)
             self.user_data[u] = data
 
-        logging.debug ("[user_data]\n")
+        log.debug ("[user_data]\n")
         for u in self.user_data.keys():
-            logging.debug ("user = %s", u)
+            log.debug ("user = %s", u)
         if owner in self.user_data:
             return self.user_data [owner]
         else:
@@ -165,9 +165,9 @@ class CoverityReportStyle2 (CoverityReport):
         self.coverity_datas = coverity_datas
 
     def get_report_by_user (self, owner):
-        logging.debug ("get_report (%s)" % owner)
+        log.debug ("get_report (%s)" % owner)
         report = ""
-        logging.debug ("Total %d datas" % len (self.coverity_datas))
+        log.debug ("Total %d datas" % len (self.coverity_datas))
 
         for p in self.coverity_datas:
             content = """
@@ -220,24 +220,24 @@ a
 </tr>""" % ("CID", "First Detected", "Impact", "Type", "File", "Function", "Category", "Owner") + data
 
             data = "<table class=\"t_data\" style=\"border-collapse:collapse;color: #444444\">" + data + "</table>"
-            logging.debug ("body 0")
-            logging.debug (data)
+            log.debug ("body 0")
+            log.debug (data)
             data = "<body>" + \
                    css + \
                    "<html>" + \
                    data
-            logging.debug ("body 1")
-            logging.debug (data)
+            log.debug ("body 1")
+            log.debug (data)
             data = data + \
                    "</html>" + \
                    "</body>"
-            logging.debug ("body 3")
-            logging.debug (data)
+            log.debug ("body 3")
+            log.debug (data)
             self.user_data[u] = data
 
-        logging.debug ("[user_data]\n")
+        log.debug ("[user_data]\n")
         for u in self.user_data.keys():
-            logging.debug ("user = %s", u)
+            log.debug ("user = %s", u)
         if owner in self.user_data:
             return self.user_data [owner]
         else:
@@ -249,9 +249,9 @@ class CoverityReportStyleHigh (CoverityReport):
         self.coverity_datas = coverity_datas
 
     def get_report_by_user (self, owner):
-        logging.debug ("get_report (%s)" % owner)
+        log.debug ("get_report (%s)" % owner)
         report = ""
-        logging.debug ("Total %d datas" % len (self.coverity_datas))
+        log.debug ("Total %d datas" % len (self.coverity_datas))
 
         for p in self.coverity_datas:
             content = """
@@ -304,24 +304,24 @@ a
 </tr>""" % ("CID", "First Detected", "Impact", "Type", "File", "Function", "Category", "Owner") + data
 
             data = "<table class=\"t_data\" style=\"border-collapse:collapse;color: #444444\">" + data + "</table>"
-            logging.debug ("body 0")
-            logging.debug (data)
+            log.debug ("body 0")
+            log.debug (data)
             data = "<body>" + \
                    css + \
                    "<html>" + \
                    data
-            logging.debug ("body 1")
-            logging.debug (data)
+            log.debug ("body 1")
+            log.debug (data)
             data = data + \
                    "</html>" + \
                    "</body>"
-            logging.debug ("body 3")
-            logging.debug (data)
+            log.debug ("body 3")
+            log.debug (data)
             self.user_data[u] = data
 
-        logging.debug ("[user_data]\n")
+        log.debug ("[user_data]\n")
         for u in self.user_data.keys():
-            logging.debug ("user = %s", u)
+            log.debug ("user = %s", u)
         if owner in self.user_data:
             return self.user_data [owner]
         else:
@@ -378,7 +378,7 @@ class Requests:
         buf = StringIO(resp.read())
         f = gzip.GzipFile(fileobj=buf)
         self.resp.text = f.read()
-        logging.debug(self.resp.text)
+        log.debug(self.resp.text)
         return self.resp
 
 requests = Requests()
@@ -438,7 +438,7 @@ class Coverity:
         global progress
         progress = progress + 1
         show_progress (progress, 100)
-        logging.debug("now page = " + str(self.__now_page))
+        log.debug("now page = " + str(self.__now_page))
         self.__set_page(self.__now_page)
         url = self.host + '/reports/table.json'
         params = dict(
@@ -461,15 +461,15 @@ class Coverity:
             cdata.displayFunction = c[u'displayFunction']
             cdata.displayCategory = c[u'displayCategory']
             cdata.link = self.get_url (cdata.cid)
-            logging.debug("[cdata] cid = %s, owner = %s, firstDetected = %s, displayType = %s, displayFile = %s, displayCategory = %s" % (cdata.cid, cdata.owner, cdata.firstDetected, cdata.displayType, cdata.displayFile, cdata.displayCategory))
+            log.debug("[cdata] cid = %s, owner = %s, firstDetected = %s, displayType = %s, displayFile = %s, displayCategory = %s" % (cdata.cid, cdata.owner, cdata.firstDetected, cdata.displayType, cdata.displayFile, cdata.displayCategory))
             coverity_datas.append (cdata)
 
-        logging.debug("offset = " + str(data[u'resultSet'][u'offset']))
-        logging.debug(len(local_datas))
+        log.debug("offset = " + str(data[u'resultSet'][u'offset']))
+        log.debug(len(local_datas))
         progress = progress + 1
         show_progress (progress, 100)
         if len(local_datas) != 0:
-            logging.debug("first cid = " + str(local_datas[0][u'cid']))
+            log.debug("first cid = " + str(local_datas[0][u'cid']))
             self.all_coverity_datas = self.all_coverity_datas + coverity_datas
             self.__now_page = self.__now_page + 1
             self.__get_outstanding()
@@ -493,7 +493,7 @@ class Coverity:
         return have_high
 
     def get_report (self, owner=""):
-        logging.debug ("get_report (%s)" % owner)
+        log.debug ("get_report (%s)" % owner)
         if len(self.all_coverity_datas) == 0:
             self.__get_outstanding()
         if owner != "" and self.__have_high (self.get_all_datas_by_user (owner)) is True:
@@ -503,7 +503,7 @@ class Coverity:
 
         report = coverity_report.get_report_by_user (owner)
         if report is None:
-            logging.error ("report is Empty")
+            log.error ("report is Empty")
         return report
 
     def get_all_users (self):
@@ -543,6 +543,8 @@ Usage
         Write to file
     -a
         Send mail to all user.
+    -f
+        config file
     -d dry run
 -l
     list all users
@@ -569,7 +571,7 @@ def __output__ (type, title, content, to = None, dry_run = False):
         print content
 
 def get_send_list (file):
-    logging.debug ("get_send_list")
+    log.debug ("get_send_list")
     if file == "":
         return []
     list = []
@@ -579,15 +581,36 @@ def get_send_list (file):
                 line = line.strip()
                 list.append(line)
     except:
-        logging.warning ("file not exist")
+        log.warning ("file not exist")
     return list
 
 if __name__ == '__main__':
+    log = logging.getLogger('coverity')
+    log_hl_stream = logging.StreamHandler()
+    log.addHandler(log_hl_stream)
     config = ConfigParser.RawConfigParser({"white_list": ""})
 
     send_list = []
+
     try:
-        cfgpath = os.path.dirname(os.path.abspath(__file__)) + "/setting.cfg"
+        opts, args = getopt.getopt(sys.argv[1:], "hru:w:o:s:ladf:", ["help", "report", "user=", "writeto=", "output_file=", "send_mail =", "list", "sendtoall", "dry_run", "config"])
+    except getopt.GetoptError as err:
+        log.warning (err)
+        __usage__()
+        sys.exit(2)
+
+    opts_dict = {}
+    for o, v in opts:
+        opts_dict [o] = v
+
+    log.debug (opts_dict)
+    if "-f" in opts_dict:
+        config_file = opts_dict["-f"]
+    else:
+        config_file = "setting.cfg"
+
+    try:
+        cfgpath = os.path.dirname(os.path.abspath(__file__)) + "/" + config_file
         config.read(cfgpath)
         host = config.get("global", "host")
         port = config.getint("global", "port")
@@ -596,9 +619,10 @@ if __name__ == '__main__':
         white_list = config.get("global", "white_list")
         project_id = config.get("coverity", "project_id")
         view_id = config.get("coverity", "view_id")
+        log_file = config.get("global", "log_file")
 
     except ConfigParser.Error:
-        logging.error ("Get cfg fail")
+        log.error ("Get cfg fail")
         exit (2)
 
     debug = "debug"
@@ -613,7 +637,7 @@ if __name__ == '__main__':
     elif debug == "error":
         level = logging.ERROR
     elif debug == "warning":
-        level = logging.WARNING
+        level = log.warnING
     elif debug == "debug":
         level = logging.DEBUG
     elif debug == "critical":
@@ -621,28 +645,19 @@ if __name__ == '__main__':
     else:
         level = logging.ERROR
 
-    logging.basicConfig(filename="/var/log/coverity.log", level=level)
+    log.setLevel (level)
 
-    logging.debug ("host = %s, port = %d, id = %s, password = %s, white_list = %s, project_id = %s, view_id = %s" % (host, port, id, password, white_list, project_id, view_id))
+    if log_file != None and log_file != "":
+        log_hl_file = logging.FileHandler(log_file, encoding="utf-8")
+        log.removeHandler (log_hl_stream)
+        log.addHandler (log_hl_file)
 
     if white_list != "":
         send_list = get_send_list (white_list)
 
-    logging.info ("host = %s, port = %d, id = %s, password = %s" % (host, port, id, password))
-
-    try:
-        opts, args = getopt.getopt(sys.argv[1:], "hru:w:o:s:lad", ["help", "report", "user=", "writeto=", "output_file=", "send_mail =", "list", "sendtoall", "dry_run"])
-    except getopt.GetoptError as err:
-        logging.warning (err)
-        __usage__()
-        sys.exit(2)
+    log.info ("host = %s, port = %d, id = %s, password = %s, white_list = %s, project_id = %s, view_id = %s, log_file = %s, config = %s" % (host, port, id, password, white_list, project_id, view_id, log_file, config_file))
 
     output = ""
-    opts_dict = {}
-    for o, v in opts:
-        opts_dict [o] = v
-
-    logging.debug (opts_dict)
 
     progress
 
@@ -657,23 +672,23 @@ if __name__ == '__main__':
             if len (send_list) == 0:
                 users = co.get_all_users ()
             else:
-                logging.info ("Get users from %s" % white_list)
+                log.info ("Get users from %s" % white_list)
                 users = send_list
-            logging.info ("%d users" % len (users))
+            log.info ("%d users" % len (users))
             for u in users:
                 if u == "Unassigned":
                     continue
                 content = co.get_report (u)
                 if content is None:
-                    logging.warning ("Content of %s is Empty" % u)
+                    log.warning ("Content of %s is Empty" % u)
                     continue
 
                 ds = co.get_all_datas_by_user (u)
                 issues_count = len (ds)
                 mail = u + "@qnap.com"
-                logging.debug ("user = %s, mail = %s" % (u, mail))
+                log.debug ("user = %s, mail = %s" % (u, mail))
                 title = "Coverity: %s - %d issues" % (u, issues_count)
-                logging.debug ("title = %s\n" % title)
+                log.debug ("title = %s\n" % title)
                 progress = progress + 1
                 show_progress (progress, 100)
                 dry_run = False
@@ -686,24 +701,24 @@ if __name__ == '__main__':
             user = opts_dict ["-u"]
         output = co.get_report (user)
         if output is None:
-            logging.error ("output is None")
+            log.error ("output is None")
 
         type = None
         to = ""
         if "-o" in opts_dict:
-            logging.info ("output to file")
+            log.info ("output to file")
             to = opts_dict ["-o"]
             type = OutputType.FILE
         elif "-s" in opts_dict:
-            logging.info ("send mail")
+            log.info ("send mail")
             to = opts_dict ["-s"]
             if not re.match(r"[^@]+@[^@]+\.[^@]+", to):
-                logging.warning ("Email %s is invalid" % to)
+                log.warning ("Email %s is invalid" % to)
                 exit (2)
 
             type = OutputType.MAIL
         else:
-            logging.info ("output to stdout")
+            log.info ("output to stdout")
             type = OutputType.STDOUT
 
         ds = co.get_all_datas_by_user (user)
