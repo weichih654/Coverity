@@ -270,12 +270,12 @@ class Coverity:
             log.error ("report is Empty")
         return report
 
-    def get_summary (self, owner):
+    def get_summary (self):
         log.debug ("get_summary")
         if len(self.all_coverity_datas) == 0:
             self.__get_outstanding()
         coverity_report = CoverityReportStyle2 (self.all_coverity_datas)
-        report = coverity_report.get_summary_by_user (owner)
+        report = coverity_report.get_summary ()
         return report
 
     def get_all_users (self):
@@ -506,16 +506,16 @@ if __name__ == '__main__':
         __output__ (type, title, output, to, dry_run)
     elif "-l" in opts_dict:
         co = Coverity (id, password.decode("base64"), project_id, view_id)
-        #output = co.get_summary ()
-        for u in co.get_all_users():
-            high_count = 0
-            data = co.get_all_datas_by_user (u)
-            for d in data:
-                if d.displayImpact == 'High':
-                    high_count = high_count + 1
-            data_count_by_user = len (data)
-            #output = output + u + " (" + str(data_count_by_user) + ") (" + high_count + " High)\n"
-            output = output + "%s (%d) (%d High)\n" % (u, data_count_by_user, high_count)
+        output = co.get_summary ()
+        #for u in co.get_all_users():
+        #    high_count = 0
+        #    data = co.get_all_datas_by_user (u)
+        #    for d in data:
+        #        if d.displayImpact == 'High':
+        #            high_count = high_count + 1
+        #    data_count_by_user = len (data)
+        #    #output = output + u + " (" + str(data_count_by_user) + ") (" + high_count + " High)\n"
+        #    output = output + "%s (%d) (%d High)\n" % (u, data_count_by_user, high_count)
 
         type = None
         to = ""
