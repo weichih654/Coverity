@@ -9,9 +9,11 @@ import logging
 import os
 import ConfigParser
 import getopt
+from report import *
 
 progress = 0
 
+log = logging.getLogger('coverity')
 def show_progress (count, total):
     progress = (count * 100 / total)
     sys.stdout.write("\r%d %%" % progress)
@@ -88,244 +90,6 @@ class CoverityData:
         self.status = ""
         self.subcategory = ""
         self.link = ""
-
-class CoverityReport:
-    def __init__ (self, coverity_datas):
-        pass
-    def get_report_by_user (self, owner):
-        pass
-
-class CoverityReportStyle1 (CoverityReport):
-    def __init__ (self, coverity_datas):
-        self.user_data = {}
-        self.coverity_datas = coverity_datas
-
-    def get_report_by_user (self, owner):
-        log.debug ("get_report (%s)" % owner)
-        report = ""
-        log.debug ("Total %d datas" % len (self.coverity_datas))
-
-        for p in self.coverity_datas:
-            content = "<tr><td style=\"border:1px solid #AAAAAA;padding: 3px;\"><a href = \"%s\" target=_blank style = \"color: navy\">%d</a></td><td style=\"border:1px solid #AAAAAA;padding: 3px;\">%s</td><td style=\"border:1px solid #AAAAAA;padding: 3px;\">%s</td><td style=\"border:1px solid #AAAAAA;padding: 3px;\">%s</td><td style=\"border:1px solid #AAAAAA;padding: 3px;\">%s</td><td style=\"border:1px solid #AAAAAA;padding: 3px;\">%s</td></tr>" % (p.link, p.cid, p.firstDetected, p.displayType, p.displayFile, p.displayCategory, p.owner)
-            if p.owner in self.user_data:
-                self.user_data[p.owner] = self.user_data[p.owner] + "\n" + content
-            else:
-                self.user_data[p.owner] = content
-
-        for u in self.user_data.keys():
-            css = """
-<style>
-table.t_data
-{
-    /* border: 1px; - **EDITED** - doesn't seem like influences here */
-    background-color: #FFFFFF;
-}
-table.t_data thead th, table.t_data thead td
-{
-    margin: 1px;
-    padding: 5px;
-}
-
-a
-{
-    color: navy;
-}
-</style>"""
-
-            data = self.user_data[u]
-            data = "<tr style = \"background-color: #CCCCCC;\"><td style=\"border:1px solid #AAAAAA;padding: 3px;\">%s</td><td style=\"border:1px solid #AAAAAA;padding: 3px;\">%s</td><td style=\"border:1px solid #AAAAAA;padding: 3px;\">%s</td><td style=\"border:1px solid #AAAAAA;padding: 3px;\">%s</td><td style=\"border:1px solid #AAAAAA;padding: 3px;\">%s</td><td style=\"border:1px solid #AAAAAA;padding: 3px;\">%s</td></tr>" % ("CID", "First Detected", "Display Type", "Display File", "Display Category", "Owner") + data
-
-            data = "<table class=\"t_data\" style=\"border-collapse:collapse;\">" + data + "</table>"
-            log.debug ("body 0")
-            log.debug (data)
-            data = "<body>" + \
-                   css + \
-                   "<html>" + \
-                   data
-            log.debug ("body 1")
-            log.debug (data)
-            data = data + \
-                   "</html>" + \
-                   "</body>"
-            log.debug ("body 3")
-            log.debug (data)
-            self.user_data[u] = data
-
-        log.debug ("[user_data]\n")
-        for u in self.user_data.keys():
-            log.debug ("user = %s", u)
-        if owner in self.user_data:
-            return self.user_data [owner]
-        else:
-            return None
-
-class CoverityReportStyle2 (CoverityReport):
-    def __init__ (self, coverity_datas):
-        self.user_data = {}
-        self.coverity_datas = coverity_datas
-
-    def get_report_by_user (self, owner):
-        log.debug ("get_report (%s)" % owner)
-        report = ""
-        log.debug ("Total %d datas" % len (self.coverity_datas))
-
-        for p in self.coverity_datas:
-            content = """
-<tr>
-    <td style=\"border:1px solid #AAAAAA;padding: 6px;\"><a href = \"%s\" target=_blank style = \"color: navy\">%d</a></td>
-    <td style=\"border:1px solid #AAAAAA;padding: 6px;\">%s</td>
-    <td style=\"border:1px solid #AAAAAA;padding: 6px;\">%s</td>
-    <td style=\"border:1px solid #AAAAAA;padding: 6px;\">%s</td>
-    <td style=\"border:1px solid #AAAAAA;padding: 6px;\">%s</td>
-    <td style=\"border:1px solid #AAAAAA;padding: 6px;\">%s</td>
-    <td style=\"border:1px solid #AAAAAA;padding: 6px;\">%s</td>
-    <td style=\"border:1px solid #AAAAAA;padding: 6px;\">%s</td>
-</tr>""" % (p.link, p.cid, p.firstDetected, p.displayImpact, p.displayType, p.displayFile, p.displayFunction, p.displayCategory, p.owner)
-            if p.owner in self.user_data:
-                self.user_data[p.owner] = self.user_data[p.owner] + "\n" + content
-            else:
-                self.user_data[p.owner] = content
-
-        for u in self.user_data.keys():
-            css = """
-<style>
-table.t_data
-{
-    /* border: 1px; - **EDITED** - doesn't seem like influences here */
-    background-color: #FFFFFF;
-}
-table.t_data thead th, table.t_data thead td
-{
-    margin: 1px;
-    padding: 5px;
-}
-
-a
-{
-    color: navy;
-}
-</style>"""
-
-            data = self.user_data[u]
-            data = """
-<tr style = \"background-color: #444444;color: #FFFFFF\">
-    <td style=\"border:1px solid #AAAAAA;padding: 6px;\">%s</td>
-    <td style=\"border:1px solid #AAAAAA;padding: 6px;\">%s</td>
-    <td style=\"border:1px solid #AAAAAA;padding: 6px;\">%s</td>
-    <td style=\"border:1px solid #AAAAAA;padding: 6px;\">%s</td>
-    <td style=\"border:1px solid #AAAAAA;padding: 6px;\">%s</td>
-    <td style=\"border:1px solid #AAAAAA;padding: 6px;\">%s</td>
-    <td style=\"border:1px solid #AAAAAA;padding: 6px;\">%s</td>
-    <td style=\"border:1px solid #AAAAAA;padding: 6px;\">%s</td>
-</tr>""" % ("CID", "First Detected", "Impact", "Type", "File", "Function", "Category", "Owner") + data
-
-            data = "<table class=\"t_data\" style=\"border-collapse:collapse;color: #444444\">" + data + "</table>"
-            log.debug ("body 0")
-            log.debug (data)
-            data = "<body>" + \
-                   css + \
-                   "<html>" + \
-                   data
-            log.debug ("body 1")
-            log.debug (data)
-            data = data + \
-                   "</html>" + \
-                   "</body>"
-            log.debug ("body 3")
-            log.debug (data)
-            self.user_data[u] = data
-
-        log.debug ("[user_data]\n")
-        for u in self.user_data.keys():
-            log.debug ("user = %s", u)
-        if owner in self.user_data:
-            return self.user_data [owner]
-        else:
-            return None
-
-class CoverityReportStyleHigh (CoverityReport):
-    def __init__ (self, coverity_datas):
-        self.user_data = {}
-        self.coverity_datas = coverity_datas
-
-    def get_report_by_user (self, owner):
-        log.debug ("get_report (%s)" % owner)
-        report = ""
-        log.debug ("Total %d datas" % len (self.coverity_datas))
-
-        for p in self.coverity_datas:
-            content = """
-<tr>
-    <td style=\"border:1px solid #AAAAAA;padding: 6px;\"><a href = \"%s\" target=_blank style = \"color: navy\">%d</a></td>
-    <td style=\"border:1px solid #AAAAAA;padding: 6px;\">%s</td>
-    <td style=\"border:1px solid #AAAAAA;padding: 6px;\">%s</td>
-    <td style=\"border:1px solid #AAAAAA;padding: 6px;\">%s</td>
-    <td style=\"border:1px solid #AAAAAA;padding: 6px;\">%s</td>
-    <td style=\"border:1px solid #AAAAAA;padding: 6px;\">%s</td>
-    <td style=\"border:1px solid #AAAAAA;padding: 6px;\">%s</td>
-    <td style=\"border:1px solid #AAAAAA;padding: 6px;\">%s</td>
-</tr>""" % (p.link, p.cid, p.firstDetected, p.displayImpact, p.displayType, p.displayFile, p.displayFunction, p.displayCategory, p.owner)
-            if p.owner in self.user_data:
-                self.user_data[p.owner] = self.user_data[p.owner] + "\n" + content
-            else:
-                self.user_data[p.owner] = content
-
-        for u in self.user_data.keys():
-            css = """
-<style>
-table.t_data
-{
-    /* border: 1px; - **EDITED** - doesn't seem like influences here */
-    background-color: #FFFFFF;
-}
-table.t_data thead th, table.t_data thead td
-{
-    margin: 1px;
-    padding: 5px;
-}
-
-a
-{
-    color: navy;
-}
-</style>"""
-
-            data = self.user_data[u]
-            data = """
-<tr style = \"background-color: red;color: #ffffff\">
-    <td style=\"border:1px solid #AAAAAA;padding: 6px;\">%s</td>
-    <td style=\"border:1px solid #AAAAAA;padding: 6px;\">%s</td>
-    <td style=\"border:1px solid #AAAAAA;padding: 6px;\">%s</td>
-    <td style=\"border:1px solid #AAAAAA;padding: 6px;\">%s</td>
-    <td style=\"border:1px solid #AAAAAA;padding: 6px;\">%s</td>
-    <td style=\"border:1px solid #AAAAAA;padding: 6px;\">%s</td>
-    <td style=\"border:1px solid #AAAAAA;padding: 6px;\">%s</td>
-    <td style=\"border:1px solid #AAAAAA;padding: 6px;\">%s</td>
-</tr>""" % ("CID", "First Detected", "Impact", "Type", "File", "Function", "Category", "Owner") + data
-
-            data = "<table class=\"t_data\" style=\"border-collapse:collapse;color: #444444\">" + data + "</table>"
-            log.debug ("body 0")
-            log.debug (data)
-            data = "<body>" + \
-                   css + \
-                   "<html>" + \
-                   data
-            log.debug ("body 1")
-            log.debug (data)
-            data = data + \
-                   "</html>" + \
-                   "</body>"
-            log.debug ("body 3")
-            log.debug (data)
-            self.user_data[u] = data
-
-        log.debug ("[user_data]\n")
-        for u in self.user_data.keys():
-            log.debug ("user = %s", u)
-        if owner in self.user_data:
-            return self.user_data [owner]
-        else:
-            return None
 
 class Requests:
     class Response :
@@ -506,6 +270,14 @@ class Coverity:
             log.error ("report is Empty")
         return report
 
+    def get_summary (self, owner):
+        log.debug ("get_summary")
+        if len(self.all_coverity_datas) == 0:
+            self.__get_outstanding()
+        coverity_report = CoverityReportStyle2 (self.all_coverity_datas)
+        report = coverity_report.get_summary_by_user (owner)
+        return report
+
     def get_all_users (self):
         if len(self.all_coverity_datas) == 0:
             self.__get_outstanding()
@@ -590,7 +362,6 @@ def get_send_list (file):
     return list
 
 if __name__ == '__main__':
-    log = logging.getLogger('coverity')
     log_hl_stream = logging.StreamHandler()
     log.addHandler(log_hl_stream)
     config = ConfigParser.RawConfigParser({"white_list": ""})
@@ -735,7 +506,7 @@ if __name__ == '__main__':
         __output__ (type, title, output, to, dry_run)
     elif "-l" in opts_dict:
         co = Coverity (id, password.decode("base64"), project_id, view_id)
-        output = ""
+        #output = co.get_summary ()
         for u in co.get_all_users():
             high_count = 0
             data = co.get_all_datas_by_user (u)
