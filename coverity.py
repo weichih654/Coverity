@@ -14,6 +14,26 @@ from report import *
 progress = 0
 
 log = logging.getLogger('coverity')
+
+class PathType:
+    CONF = 0
+    ARG = 1
+
+def correct_path (type, path):
+    if path is None or path == "":
+        return ""
+
+    _path = os.path.dirname(os.path.abspath(__file__)) + "/" + path
+
+    if type == PathType.ARG:
+        if path[0] == "." or path[0] == "/":
+            _path = os.path.dirname(os.path.abspath(path)) + "/" + os.path.basename(path)
+    else:
+        if path[0] == "/":
+            _path = os.path.dirname(os.path.abspath(path)) + "/" + os.path.basename(path)
+
+    return _path
+
 def show_progress (count, total):
     progress = (count * 100 / total)
     sys.stdout.write("\r%d %%" % progress)
@@ -386,13 +406,16 @@ if __name__ == '__main__':
         config_file = "setting.cfg"
 
     try:
-        cfgpath = os.path.dirname(os.path.abspath(__file__)) + "/" + config_file
+        log.debug ("config_file = %s" % config_file)
+        cfgpath = correct_path (PathType.ARG, config_file)
+        log.debug ("cfgpath = %s" % cfgpath)
         config.read(cfgpath)
         host = config.get("global", "host")
         port = config.getint("global", "port")
         id = config.get("global", "id")
         password = config.get("global", "password")
         white_list = config.get("global", "white_list")
+        white_list = correct_path (PathType.CONF, white_list)
         project_id = config.get("coverity", "project_id")
         view_id = config.get("coverity", "view_id")
         log_file = config.get("global", "log_file")
