@@ -4,18 +4,18 @@ log = logging.getLogger('coverity')
 def get_hot_color (count):
     if count < 10: # black
         return "#000000"
-    elif count < 20: # red
+    elif count < 30: # red
         return "#ff0000"
-    elif count < 30: # blue
+    elif count < 50: # blue
         return "#0000cc"
-    elif count < 40: # cyan
+    elif count < 80: # cyan
         return "008fb3"
-    elif count < 50: # green
-        return "#33cc33"
-    elif count < 60: # yellow
+    elif count < 150: # green
+        return "#e4e400"
+    elif count < 300: # yellow
         return "#e6e600"
     else: # purple
-        return "#660066"
+        return "#ce00ce"
 
 class CoverityReport:
     def __init__ (self, coverity):
@@ -230,38 +230,38 @@ a
             a_m = a_m + m
             a_h = a_h + h
             c = """
-<td style=\"border:1px solid #AAAAAA;padding: 6px;\">%s</td>
-<td style=\"border:1px solid #AAAAAA;padding: 6px;color: %s\">%d</td>
-<td style=\"border:1px solid #AAAAAA;padding: 6px;color: %s\">%d</td>
-<td style=\"border:1px solid #AAAAAA;padding: 6px;color: %s\">%d</td>""" % (u, get_hot_color (l), l, get_hot_color (m), m, get_hot_color (h), h)
+<td style=\"border-collapse: separate;border: 1px #ccc solid;border-radius: 3px;text-align:center;padding: 6px 30px 6px 30px;color: #000000;\">%s</td>
+<td style=\"border-collapse: separate;border: 1px #ccc solid;border-radius: 3px;text-align:center;padding: 6px 20px 6px 20px;color: %s\">%d</td>
+<td style=\"border-collapse: separate;border: 1px #ccc solid;border-radius: 3px;text-align:center;padding: 6px 20px 6px 20px;color: %s\">%d</td>
+<td style=\"border-collapse: separate;border: 1px #ccc solid;border-radius: 3px;text-align:center;padding: 6px 20px 6px 20px;color: %s\">%d</td>""" % (u, get_hot_color (l), l, get_hot_color (m), m, get_hot_color (h), h)
             table_content = table_content + "<tr>" + c + "</tr>"
 
         field = """
-<tr style = \"background-color: #404040;color: #d9d9d9;\">
-<td style=\"border:1px solid #AAAAAA;padding: 6px;\">%s</td>
-<td style=\"border:1px solid #AAAAAA;padding: 6px;\">%s</td>
-<td style=\"border:1px solid #AAAAAA;padding: 6px;\">%s</td>
-<td style=\"border:1px solid #AAAAAA;padding: 6px;\">%s</td>
+<tr style = \"\">
+<td style = \"border-collapse: separate;border: 0px #ccc solid;border-radius: 3px;background-color: #222222;color:#cccccc;text-align:center;padding: 6px 30px 6px 30px;\">%s</td>
+<td style = \"border-collapse: separate;border: 0px #ccc solid;border-radius: 3px;background-color: #222222;color:#cccccc;text-align:center;padding: 6px 20px 6px 20px;\">%s</td>
+<td style = \"border-collapse: separate;border: 0px #ccc solid;border-radius: 3px;background-color: #222222;color:#cccccc;text-align:center;padding: 6px 20px 6px 20px;\">%s</td>
+<td style = \"border-collapse: separate;border: 0px #ccc solid;border-radius: 3px;background-color: #222222;color:#cccccc;text-align:center;padding: 6px 20px 6px 20px;\">%s</td>
 </tr>
 """ % ("Owner", "Low", "Medium", "High")
 
         view_url = "%s/reports.htm?projectId=%s&viewId=%s" % (self.coverity.host, self.coverity.projectId, self.coverity.viewId)
         info = """
-<div id = \"view_link\">
+<div id = \"view_link\" style = \"margin: 20px;\">
     <a href="%s" target=_blank>%s</a>
 </div>
         """ % (view_url, view_url)
 
         table_total = """
 <tr style = \"background-color: #CCCCCC;\">
-<td style=\"border:1px solid #AAAAAA;padding: 6px;\">%s</td>
-<td style=\"border:1px solid #AAAAAA;padding: 6px;\">%d</td>
-<td style=\"border:1px solid #AAAAAA;padding: 6px;\">%d</td>
-<td style=\"border:1px solid #AAAAAA;padding: 6px;\">%d</td>
+<td style=\"border-collapse: separate;border: 1px #ccc solid;border-radius: 3px;text-align:center;padding: 6px 30px 6px 30px;color: #000000;\">%s</td>
+<td style=\"border-collapse: separate;border: 1px #ccc solid;border-radius: 3px;text-align:center;padding: 6px 20px 6px 20px;color: #000000;">%d</td>
+<td style=\"border-collapse: separate;border: 1px #ccc solid;border-radius: 3px;text-align:center;padding: 6px 20px 6px 20px;color: #000000;">%d</td>
+<td style=\"border-collapse: separate;border: 1px #ccc solid;border-radius: 3px;text-align:center;padding: 6px 20px 6px 20px;color: #000000;">%d</td>
 </tr>
 """ % ("Total", a_l, a_m, a_h)
         
-        table_content = "<div id = \"main_talbe\"><table class=\"t_data\" style=\"border-collapse:collapse;\">" + field + table_content + table_total + "</table></div>"
+        table_content = "<div id = \"main_talbe\"><table class=\"t_data\" style=\"margin: 20px; border-collapse:saparate;font-weight:bold;\">" + field + table_content + table_total + "</table></div>"
         body = info + table_content
 
         content = "<body>" + css + "<html>" + body + "</html></body>"
