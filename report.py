@@ -1,5 +1,9 @@
 import logging
+import urllib
 log = logging.getLogger('coverity')
+
+GMAIL_SUBJECT="Coverity:"
+GMAIL_LINK="https://mail.google.com/mail/u/0/?view=cm&fs=1&tf=1&su=" + GMAIL_SUBJECT 
 
 def get_hot_color (count):
     if count < 10: # black
@@ -205,10 +209,8 @@ table.t_data thead th, table.t_data thead td
     padding: 5px;
 }
 
-a
-{
-    color: navy;
-}
+a:link, a:visited, a:active { color: #000000; text-decoration:none; } a:hover { color: gray; }
+
 </style>"""
         table_content = ""
         a_l = 0
@@ -229,11 +231,18 @@ a
             a_l = a_l + l
             a_m = a_m + m
             a_h = a_h + h
+            mail_body = """
+Low : %d
+Medium : %d
+High : %d
+""" % (l, m, h)
+
             c = """
-<td style=\"border-collapse: separate;border: 1px #ccc solid;border-radius: 3px;text-align:center;padding: 6px 30px 6px 30px;color: #000000;\">%s</td>
+<td style=\"border-collapse: separate;border: 1px #ccc solid;border-radius: 3px;text-align:center;padding: 6px 30px 6px 30px;color: #000000;\"><a href = "%s&body=%s&su=%s@qnap.com" target=_blank>%s</a></td>
 <td style=\"border-collapse: separate;border: 1px #ccc solid;border-radius: 3px;text-align:center;padding: 6px 20px 6px 20px;color: %s\">%d</td>
 <td style=\"border-collapse: separate;border: 1px #ccc solid;border-radius: 3px;text-align:center;padding: 6px 20px 6px 20px;color: %s\">%d</td>
-<td style=\"border-collapse: separate;border: 1px #ccc solid;border-radius: 3px;text-align:center;padding: 6px 20px 6px 20px;color: %s\">%d</td>""" % (u, get_hot_color (l), l, get_hot_color (m), m, get_hot_color (h), h)
+<td style=\"border-collapse: separate;border: 1px #ccc solid;border-radius: 3px;text-align:center;padding: 6px 20px 6px 20px;color: %s\">%d</td>""" % (GMAIL_LINK, urllib.quote (mail_body), u, u, get_hot_color (l), l, get_hot_color (m), m, get_hot_color (h), h)
+
             table_content = table_content + "<tr>" + c + "</tr>"
 
         field = """
